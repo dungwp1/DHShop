@@ -1,0 +1,49 @@
+package vn.DHShop.controller;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import vn.DHShop.dto.request.CategoryRequestDTO;
+import vn.DHShop.dto.response.ApiResponse;
+import vn.DHShop.dto.response.CategoryResponseDTO;
+import vn.DHShop.service.CategoryService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/categories")
+@RequiredArgsConstructor
+@Slf4j
+@Validated
+public class CategoryController {
+    private final CategoryService categoryService;
+
+    @PostMapping(value = "")
+    public ResponseEntity<ApiResponse<CategoryResponseDTO>> addCategory(@Valid @RequestBody CategoryRequestDTO request){
+        CategoryResponseDTO response = categoryService.addCategory(request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(HttpStatus.CREATED.value(), "Add Succeed", response));
+
+    }
+
+    @GetMapping(value = "")
+    public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getAllCategories() {
+        List<CategoryResponseDTO> listResponse = categoryService.getAllCategory();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Get All Category Success", listResponse));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<ApiResponse> deleteCategory(@Valid @PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.NO_CONTENT.value(), "Delete Succeed"));
+    }
+}
