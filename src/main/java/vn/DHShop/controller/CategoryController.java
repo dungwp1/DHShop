@@ -22,7 +22,7 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @PostMapping(value = "")
+    @PostMapping
     public ResponseEntity<ApiResponse<CategoryResponseDTO>> addCategory(@Valid @RequestBody CategoryRequestDTO request){
         CategoryResponseDTO response = categoryService.addCategory(request);
         return ResponseEntity
@@ -31,15 +31,23 @@ public class CategoryController {
 
     }
 
-    @GetMapping(value = "")
+    @GetMapping
     public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getAllCategories() {
-        List<CategoryResponseDTO> listResponse = categoryService.getAllCategory();
+        List<CategoryResponseDTO> listResponse = categoryService.getAllCategories();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), "Get All Category Success", listResponse));
     }
 
-    @DeleteMapping(value = "/{id}")
+    @GetMapping(value = "/{categoryId}")
+    public ResponseEntity<ApiResponse<CategoryResponseDTO>> getCategoryById(@PathVariable Long categoryId) {
+        CategoryResponseDTO response = categoryService.getCategoryById(categoryId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Get Category Successfully", response));
+    }
+
+    @DeleteMapping
     public ResponseEntity<ApiResponse> deleteCategory(@Valid @PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity

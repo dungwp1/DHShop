@@ -1,5 +1,6 @@
 package vn.DHShop.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.GeneratedValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryResponseDTO> getAllCategory() {
+    public List<CategoryResponseDTO> getAllCategories() {
         List<Category> allCategory = categoryRepository.findAll();
         log.info("Get All Category success: " + allCategory);
 
@@ -49,6 +50,19 @@ public class CategoryServiceImpl implements CategoryService {
         });
         return listResponse;
     }
+
+    @Override
+    public CategoryResponseDTO getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Category not found"));
+
+        CategoryResponseDTO response = new CategoryResponseDTO();
+        response.setId(category.getId());
+        response.setName(category.getName());
+
+        return response;
+    }
+
 
     @Override
     public void deleteCategory(Long id) {
