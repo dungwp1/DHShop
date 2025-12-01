@@ -23,11 +23,11 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<CategoryResponseDTO>> addCategory(@Valid @RequestBody CategoryRequestDTO request){
+    public ResponseEntity<ApiResponse<CategoryResponseDTO>> addCategory(@Valid @RequestBody CategoryRequestDTO request) {
         CategoryResponseDTO response = categoryService.addCategory(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(HttpStatus.CREATED.value(), "Add Succeed", response));
+                .body(new ApiResponse<>(HttpStatus.CREATED.value(), "Thêm " + request.getName() + " vào database thành công", response));
 
     }
 
@@ -36,7 +36,7 @@ public class CategoryController {
         List<CategoryResponseDTO> listResponse = categoryService.getAllCategories();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ApiResponse<>(HttpStatus.OK.value(), "Get All Category Success", listResponse));
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Lấy danh sách Category thành công", listResponse));
     }
 
     @GetMapping(value = "/{categoryId}")
@@ -44,7 +44,7 @@ public class CategoryController {
         CategoryResponseDTO response = categoryService.getCategoryById(categoryId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ApiResponse<>(HttpStatus.OK.value(), "Get Category Successfully", response));
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Lấy " + response.getName() + " từ database thành công", response));
     }
 
     @PutMapping(value = "/{categoryId}")
@@ -52,14 +52,14 @@ public class CategoryController {
         CategoryResponseDTO response = categoryService.updateCategoryById(categoryId, request);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ApiResponse<>(HttpStatus.OK.value(), "Category Updated Successfully", response));
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Cập nhật " + response.getName() + " thành công", response));
     }
 
-    @DeleteMapping
-    public ResponseEntity<ApiResponse> deleteCategory(@Valid @PathVariable Long id) {
-        categoryService.deleteCategory(id);
+    @DeleteMapping(value = "/{categoryId}")
+    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ApiResponse<>(HttpStatus.NO_CONTENT.value(), "Delete Succeed"));
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Xóa thành công"));
     }
 }

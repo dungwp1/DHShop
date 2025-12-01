@@ -9,12 +9,14 @@ import vn.DHShop.dto.response.BrandResponseDTO;
 import vn.DHShop.dto.response.ModelResponseDTO;
 import vn.DHShop.entity.Brand;
 import vn.DHShop.entity.Model;
+import vn.DHShop.exception.BadRequestException;
 import vn.DHShop.repository.BrandRepository;
 import vn.DHShop.repository.ModelRepository;
 import vn.DHShop.service.ModelService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -22,11 +24,15 @@ import java.util.List;
 public class ModelServiceImpl implements ModelService {
     private final ModelRepository modelRepository;
     private final BrandRepository brandRepository;
+
     @Override
-    public ModelResponseDTO addModel(Long brandId, ModelRequestDTO request) {
+    public ModelResponseDTO addModel(Long categoryId, Long brandId, ModelRequestDTO request) {
 //        Check brandId entity
         Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new EntityNotFoundException("Brand is not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Brand có id là: " + brandId));
+        if (!Objects.equals(brand.getCategory().getId(), categoryId)) {
+            throw new BadRequestException("Brand và Category không khớp");
+        }
 //        Map sang brandDTO
         BrandResponseDTO brandResponse = new BrandResponseDTO(brand.getId(), brand.getName());
 
@@ -46,10 +52,13 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public List<ModelResponseDTO> getAllModels(Long brandId) {
+    public List<ModelResponseDTO> getAllModels(Long categoryId, Long brandId) {
 //        Check brandId
         Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(()-> new EntityNotFoundException("Model not found!!!"));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Brand có id là: " + brandId));
+        if (!Objects.equals(brand.getCategory().getId(), categoryId)) {
+            throw new BadRequestException("Brand và Category không khớp");
+        }
 //        Map sang DTO
         BrandResponseDTO brandResponse = new BrandResponseDTO(brand.getId(), brand.getName());
 //        Get ra list entity model
@@ -67,15 +76,18 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public ModelResponseDTO getModelById(Long brandId, Long modelId) {
+    public ModelResponseDTO getModelById(Long categoryId, Long brandId, Long modelId) {
 //        Check brandId
         Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(()-> new EntityNotFoundException("Model not found!!!"));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Brand có id là: " + brandId));
+        if (!Objects.equals(brand.getCategory().getId(), categoryId)) {
+            throw new BadRequestException("Brand và Category không khớp");
+        }
 //        Map sang DTO
         BrandResponseDTO brandResponse = new BrandResponseDTO(brand.getId(), brand.getName());
 //        Get entity
         Model model = modelRepository.findById(modelId)
-                .orElseThrow(()-> new EntityNotFoundException("Model not found!!!"));
+                .orElseThrow(() -> new EntityNotFoundException("Model not found!!!"));
 //        Map sang responseDTO
         ModelResponseDTO response = new ModelResponseDTO();
         response.setId(model.getId());
@@ -85,7 +97,19 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public void deleteModelById(Long modelId) {
-        modelRepository.deleteById(modelId);
+    public void deleteModelById(Long categoryId, Long brandId, Long modelId) {
+//        Check brand
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Brand có id là: " + brandId));
+        if (!Objects.equals(brand.getCategory().getId(), categoryId)) {
+            throw new BadRequestException("Brand và Category không khớp");
+        }
+//        Check model
+        Model model = modelRepository.findById(modelId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Model có id là: " + modelId));
+        if (!Objects.equals(model.getBrand().getId(), brandId))
+            throw new BadRequestException("Model và Brand không khớp");
+        modelRepository.delete(model);
+        log.info("Deleted model {} of brand {}", modelId, brandId);
     }
 }

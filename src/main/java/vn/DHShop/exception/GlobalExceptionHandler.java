@@ -17,6 +17,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleEntityNotFoundException(EntityNotFoundException e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), e.getMessage(),null));
+                .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiResponse<String>> handleBadRequestException(BadRequestException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
     }
 }

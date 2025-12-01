@@ -9,13 +9,14 @@ import vn.DHShop.dto.response.BrandResponseDTO;
 import vn.DHShop.dto.response.CategoryResponseDTO;
 import vn.DHShop.entity.Brand;
 import vn.DHShop.entity.Category;
+import vn.DHShop.exception.BadRequestException;
 import vn.DHShop.repository.BrandRepository;
 import vn.DHShop.repository.CategoryRepository;
 import vn.DHShop.service.BrandService;
-import vn.DHShop.service.CategoryService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -29,7 +30,7 @@ public class BrandServiceImpl implements BrandService {
     public BrandResponseDTO addBrand(Long categoryId, BrandRequestDTO request) {
 //      Check xem có chứa Category chưa
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(()-> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Category có id là: " + categoryId));
 
 //      Tạo entity để lưu vào DB
         Brand brand = new Brand();
@@ -55,7 +56,7 @@ public class BrandServiceImpl implements BrandService {
     public List<BrandResponseDTO> getAllBrands(Long categoryId) {
         //      Check xem có chứa Category chưa
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(()-> new EntityNotFoundException("CategoryId of Brand not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Category có id là: " + categoryId));
         //Map entity Category sang DTO Category
         CategoryResponseDTO categoryDTO = new CategoryResponseDTO();
         categoryDTO.setId(category.getId());
@@ -77,7 +78,12 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public void deleteBrand(Long brandId) {
-        brandRepository.deleteById(brandId);
+    public void deleteBrand(Long categoryId, Long brandId) {
+//        Check brand
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Brand có id là: " + brandId));
+        if (!Objects.equals(brand.getCategory().getId(), categoryId))
+            throw new BadRequestException("Brand và Category không khớp");
+        brandRepository.delete(brand);
     }
 }

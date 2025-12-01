@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponseDTO getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Category có id là: " + id));
 
         CategoryResponseDTO response = new CategoryResponseDTO();
         response.setId(category.getId());
@@ -64,9 +64,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDTO updateCategoryById(Long id, CategoryRequestDTO request) {
-//        Lấy ra entity category có categoryId
+//        Check category
         Category category = categoryRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Category có id là: " + id));
 //        Update category theo request
         category.setName(request.getName());
 //        Lưu vào DB
@@ -80,9 +80,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-
     @Override
     public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
+        //        Check category
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Category có id là: " + id));
+        categoryRepository.delete(category);
     }
 }
