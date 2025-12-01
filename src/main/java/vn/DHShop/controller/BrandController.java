@@ -23,15 +23,15 @@ public class BrandController {
     private final BrandService brandService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<BrandResponseDTO>> addBrand(@Valid @RequestBody BrandRequestDTO request) {
-        BrandResponseDTO response = brandService.addBrand(request);
+    public ResponseEntity<ApiResponse<BrandResponseDTO>> addBrand(@PathVariable Long categoryId,@Valid @RequestBody BrandRequestDTO request) {
+        BrandResponseDTO response = brandService.addBrand(categoryId, request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(HttpStatus.CREATED.value(), "Brand created successfully", response));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<BrandResponseDTO>>> getAllBrands(@Valid @PathVariable Long categoryId) {
+    public ResponseEntity<ApiResponse<List<BrandResponseDTO>>> getAllBrands(@PathVariable Long categoryId) {
         List<BrandResponseDTO> listResponse = brandService.getAllBrands(categoryId);
         return ResponseEntity
                 .status(HttpStatus.OK)

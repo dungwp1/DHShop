@@ -47,6 +47,14 @@ public class CategoryController {
                 .body(new ApiResponse<>(HttpStatus.OK.value(), "Get Category Successfully", response));
     }
 
+    @PutMapping(value = "/{categoryId}")
+    public ResponseEntity<ApiResponse<CategoryResponseDTO>> updateCategoryId(@PathVariable Long categoryId, @RequestBody CategoryRequestDTO request) {
+        CategoryResponseDTO response = categoryService.updateCategoryById(categoryId, request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Category Updated Successfully", response));
+    }
+
     @DeleteMapping
     public ResponseEntity<ApiResponse> deleteCategory(@Valid @PathVariable Long id) {
         categoryService.deleteCategory(id);

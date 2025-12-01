@@ -1,7 +1,6 @@
 package vn.DHShop.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.GeneratedValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -62,6 +61,24 @@ public class CategoryServiceImpl implements CategoryService {
 
         return response;
     }
+
+    @Override
+    public CategoryResponseDTO updateCategoryById(Long id, CategoryRequestDTO request) {
+//        Lấy ra entity category có categoryId
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Category not found"));
+//        Update category theo request
+        category.setName(request.getName());
+//        Lưu vào DB
+        Category savedCategory = categoryRepository.save(category);
+
+        CategoryResponseDTO response = new CategoryResponseDTO();
+        response.setId(savedCategory.getId());
+        response.setName(savedCategory.getName());
+
+        return response;
+    }
+
 
 
     @Override

@@ -24,14 +24,11 @@ import java.util.List;
 public class BrandServiceImpl implements BrandService {
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
-    private final CategoryService categoryService;
 
     @Override
-    public BrandResponseDTO addBrand(BrandRequestDTO request) {
+    public BrandResponseDTO addBrand(Long categoryId, BrandRequestDTO request) {
 //      Check xem có chứa Category chưa
-        Long id = request.getCategoryId();
-
-        Category category = categoryRepository.findById(id)
+        Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new EntityNotFoundException("Category not found"));
 
 //      Tạo entity để lưu vào DB

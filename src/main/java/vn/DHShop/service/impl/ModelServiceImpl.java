@@ -1,0 +1,91 @@
+package vn.DHShop.service.impl;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import vn.DHShop.dto.request.ModelRequestDTO;
+import vn.DHShop.dto.response.BrandResponseDTO;
+import vn.DHShop.dto.response.ModelResponseDTO;
+import vn.DHShop.entity.Brand;
+import vn.DHShop.entity.Model;
+import vn.DHShop.repository.BrandRepository;
+import vn.DHShop.repository.ModelRepository;
+import vn.DHShop.service.ModelService;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class ModelServiceImpl implements ModelService {
+    private final ModelRepository modelRepository;
+    private final BrandRepository brandRepository;
+    @Override
+    public ModelResponseDTO addModel(Long brandId, ModelRequestDTO request) {
+//        Check brandId entity
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(() -> new EntityNotFoundException("Brand is not found"));
+//        Map sang brandDTO
+        BrandResponseDTO brandResponse = new BrandResponseDTO(brand.getId(), brand.getName());
+
+        //        Tạo entity model
+        Model model = new Model();
+        model.setName(request.getName());
+        model.setBrand(brand);
+//        Lưu vào db
+        Model savedModel = modelRepository.save(model);
+//        Tạo responseDTO
+        ModelResponseDTO response = new ModelResponseDTO();
+        response.setId(savedModel.getId());
+        response.setName(savedModel.getName());
+        response.setBrand(brandResponse);
+
+        return response;
+    }
+
+    @Override
+    public List<ModelResponseDTO> getAllModels(Long brandId) {
+//        Check brandId
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(()-> new EntityNotFoundException("Model not found!!!"));
+//        Map sang DTO
+        BrandResponseDTO brandResponse = new BrandResponseDTO(brand.getId(), brand.getName());
+//        Get ra list entity model
+        List<Model> listModel = modelRepository.findAllByBrandId(brandId);
+//        Map sang DTO
+        List<ModelResponseDTO> listResponse = new ArrayList<>();
+        listModel.forEach(item -> {
+            ModelResponseDTO response = new ModelResponseDTO();
+            response.setId(item.getId());
+            response.setName(item.getName());
+            response.setBrand(brandResponse);
+            listResponse.add(response);
+        });
+        return listResponse;
+    }
+
+    @Override
+    public ModelResponseDTO getModelById(Long brandId, Long modelId) {
+//        Check brandId
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(()-> new EntityNotFoundException("Model not found!!!"));
+//        Map sang DTO
+        BrandResponseDTO brandResponse = new BrandResponseDTO(brand.getId(), brand.getName());
+//        Get entity
+        Model model = modelRepository.findById(modelId)
+                .orElseThrow(()-> new EntityNotFoundException("Model not found!!!"));
+//        Map sang responseDTO
+        ModelResponseDTO response = new ModelResponseDTO();
+        response.setId(model.getId());
+        response.setName(model.getName());
+        response.setBrand(brandResponse);
+        return response;
+    }
+
+    @Override
+    public void deleteModelById(Long modelId) {
+        modelRepository.deleteById(modelId);
+    }
+}
