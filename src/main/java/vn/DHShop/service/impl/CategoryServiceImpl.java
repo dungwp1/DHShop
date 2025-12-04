@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import vn.DHShop.dto.request.CategoryRequestDTO;
 import vn.DHShop.dto.response.CategoryResponseDTO;
 import vn.DHShop.entity.Category;
+import vn.DHShop.exception.BadRequestException;
 import vn.DHShop.repository.CategoryRepository;
 import vn.DHShop.service.CategoryService;
 
@@ -21,6 +22,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDTO addCategory(CategoryRequestDTO request) {
+//        Check tồn tại category
+        Category isCategory = categoryRepository.findByName(request.getName());
+        if (isCategory != null) throw new BadRequestException("Category đã tồn tại trong hệ thống");
+
         Category category = new Category();
         category.setName(request.getName());
 
@@ -87,4 +92,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Category có id là: " + id));
         categoryRepository.delete(category);
     }
+
+
 }

@@ -3,6 +3,7 @@ package vn.DHShop.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.DHShop.dto.request.ModelRequestDTO;
 import vn.DHShop.dto.response.ApiResponse;
 import vn.DHShop.dto.response.ModelResponseDTO;
+import vn.DHShop.entity.Model;
 import vn.DHShop.service.ModelService;
 
 import java.util.List;
@@ -53,5 +55,14 @@ public class ModelController {
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), "Xóa Model thành công"));
 
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<ApiResponse<List<ModelResponseDTO>>> getAllModels(
+            @PathVariable Long categoryId, @PathVariable Long brandId, @RequestParam int pageNo, @RequestParam int pageSize) {
+        List<ModelResponseDTO> response = modelService.getModels(categoryId, brandId, pageNo, pageSize);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Lấy danh sách Model thành công", response));
     }
 }

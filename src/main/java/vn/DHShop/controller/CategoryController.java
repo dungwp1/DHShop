@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.DHShop.dto.request.CategoryRequestDTO;
 import vn.DHShop.dto.response.ApiResponse;
 import vn.DHShop.dto.response.CategoryResponseDTO;
+import vn.DHShop.entity.Category;
 import vn.DHShop.service.CategoryService;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 @Validated
 public class CategoryController {
     private final CategoryService categoryService;
+
 
     @PostMapping
     public ResponseEntity<ApiResponse<CategoryResponseDTO>> addCategory(@Valid @RequestBody CategoryRequestDTO request) {
@@ -62,4 +64,5 @@ public class CategoryController {
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), "Xóa thành công"));
     }
+
 }
