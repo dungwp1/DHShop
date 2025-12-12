@@ -30,5 +30,6 @@ public class ItemResponseDTO {
     private Long price;
     private String description;
     private List<String> imageURLs;
+    
 
 }

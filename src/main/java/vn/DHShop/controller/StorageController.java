@@ -15,7 +15,7 @@ import vn.DHShop.service.StorageService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/storages")
+@RequestMapping("/api/storages")
 @Validated
 @RequiredArgsConstructor
 @Slf4j

@@ -15,7 +15,7 @@ import vn.DHShop.service.ColorService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/colors")
+@RequestMapping("/api/colors")
 @RequiredArgsConstructor
 @Slf4j
 @Validated

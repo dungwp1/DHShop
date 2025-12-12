@@ -17,7 +17,7 @@ import vn.DHShop.service.ModelService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories/{categoryId}/brands/{brandId}/models")
+@RequestMapping("/api/categories/{categoryId}/brands/{brandId}/models")
 @RequiredArgsConstructor
 @Slf4j
 @Validated

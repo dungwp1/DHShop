@@ -15,7 +15,7 @@ import vn.DHShop.service.RamService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rams")
+@RequestMapping("/api/rams")
 @Slf4j
 @Validated
 @RequiredArgsConstructor

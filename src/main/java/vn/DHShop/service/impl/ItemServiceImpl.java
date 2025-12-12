@@ -3,15 +3,18 @@ package vn.DHShop.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.DHShop.dto.request.ItemRequestDTO;
 import vn.DHShop.dto.response.ItemResponseDTO;
+import vn.DHShop.dto.response.PageItemsResponseDTO;
 import vn.DHShop.entity.*;
 import vn.DHShop.exception.BadRequestException;
 import vn.DHShop.repository.*;
 import vn.DHShop.service.ItemService;
-import vn.DHShop.service.ModelService;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -115,10 +118,16 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemResponseDTO> getAllItem() {
-        List<Item> listItem = itemRepository.findAll();
-        List<ItemResponseDTO> listResponse = new ArrayList<>();
-        listItem.forEach(i -> {
+    public PageItemsResponseDTO getAllItem(int pageNo, int pageSize) {
+//        Convert pageNo = 0
+        if (pageNo == 0) throw new BadRequestException("Không có trang số 0");
+
+        Pageable page = PageRequest.of(pageNo - 1, pageSize);
+        Page<Item> pageItems = itemRepository.findAll(page);
+
+        PageItemsResponseDTO pageResponse = new PageItemsResponseDTO();
+        List<ItemResponseDTO> listItem = new ArrayList<>();
+        pageItems.forEach(i -> {
             ItemResponseDTO response = new ItemResponseDTO();
             response.setId(i.getId());
             response.setCategoryId(i.getCategory().getId());
@@ -142,10 +151,14 @@ public class ItemServiceImpl implements ItemService {
                 listURL.add(ii.getURL());
             });
             response.setImageURLs(listURL);
-
-            listResponse.add(response);
+            listItem.add(response);
         });
-        return listResponse;
+
+        pageResponse.setItems(listItem);
+        pageResponse.setCurrentPage(pageItems.getNumber() + 1);
+        pageResponse.setTotalPages(pageItems.getTotalPages());
+        pageResponse.setTotalItems(pageItems.getTotalElements());
+        return pageResponse;
     }
 
     @Override
@@ -179,6 +192,106 @@ public class ItemServiceImpl implements ItemService {
 
 
         return response;
+    }
+
+    @Override
+    public PageItemsResponseDTO getItemByCategoryId(Long categoryId, int pageNo, int pageSize) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Category"));
+
+        Pageable page = PageRequest.of(pageNo - 1, pageSize);
+        Page<Item> pageItems = itemRepository.findAllByCategoryId(categoryId, page);
+        PageItemsResponseDTO pageResponse = new PageItemsResponseDTO();
+        List<ItemResponseDTO> listItem = new ArrayList<>();
+
+        pageItems.forEach(i -> {
+            ItemResponseDTO response = new ItemResponseDTO();
+            response.setId(i.getId());
+            response.setCategoryId(i.getCategory().getId());
+            response.setCategoryName(i.getCategory().getName());
+            response.setBrandId(i.getBrand().getId());
+            response.setBrandName(i.getBrand().getName());
+            response.setModelId(i.getModel().getId());
+            response.setModelName(i.getModel().getName());
+            response.setRamId(i.getRam().getId());
+            response.setRamName(i.getRam().getName());
+            response.setStorageId(i.getStorage().getId());
+            response.setStorageName(i.getStorage().getName());
+            response.setColorId(i.getColor().getId());
+            response.setColorName(i.getColor().getName());
+            response.setHexColor(i.getColor().getHexColor());
+            response.setPrice(i.getPrice());
+            response.setDescription(i.getDescription());
+
+            List<String> listURL = new ArrayList<>();
+            i.getImages().forEach(ii -> {
+                listURL.add(ii.getURL());
+            });
+            response.setImageURLs(listURL);
+            listItem.add(response);
+        });
+
+        pageResponse.setItems(listItem);
+        pageResponse.setCurrentPage(pageItems.getNumber() + 1);
+        pageResponse.setTotalPages(pageItems.getTotalPages());
+        pageResponse.setTotalItems(pageItems.getTotalElements());
+
+        return pageResponse;
+    }
+
+    @Override
+    public PageItemsResponseDTO getItemByBrandId(Long categoryId, Long brandId, int pageNo, int pageSize) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Category"));
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy brand"));
+        if (brand.getCategory().getId() != categoryId)
+            throw new BadRequestException("Category và Brand không trùng nhau");
+
+        Pageable page = PageRequest.of(pageNo - 1, pageSize);
+        Page<Item> pageItems = itemRepository.findAllByBrandId(brandId, page);
+        PageItemsResponseDTO pageResponse = new PageItemsResponseDTO();
+        List<ItemResponseDTO> listItem = new ArrayList<>();
+
+        pageItems.forEach(i -> {
+            ItemResponseDTO response = new ItemResponseDTO();
+            response.setId(i.getId());
+            response.setCategoryId(i.getCategory().getId());
+            response.setCategoryName(i.getCategory().getName());
+            response.setBrandId(i.getBrand().getId());
+            response.setBrandName(i.getBrand().getName());
+            response.setModelId(i.getModel().getId());
+            response.setModelName(i.getModel().getName());
+            response.setRamId(i.getRam().getId());
+            response.setRamName(i.getRam().getName());
+            response.setStorageId(i.getStorage().getId());
+            response.setStorageName(i.getStorage().getName());
+            response.setColorId(i.getColor().getId());
+            response.setColorName(i.getColor().getName());
+            response.setHexColor(i.getColor().getHexColor());
+            response.setPrice(i.getPrice());
+            response.setDescription(i.getDescription());
+
+            List<String> listURL = new ArrayList<>();
+            i.getImages().forEach(ii -> {
+                listURL.add(ii.getURL());
+            });
+            response.setImageURLs(listURL);
+            listItem.add(response);
+        });
+
+        pageResponse.setItems(listItem);
+        pageResponse.setCurrentPage(pageItems.getNumber() + 1);
+        pageResponse.setTotalPages(pageItems.getTotalPages());
+        pageResponse.setTotalItems(pageItems.getTotalElements());
+
+
+        return pageResponse;
+    }
+
+    @Override
+    public PageItemsResponseDTO getItemByModelId(Long categoryId) {
+        return null;
     }
 
     @Override

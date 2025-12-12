@@ -10,13 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import vn.DHShop.dto.request.CategoryRequestDTO;
 import vn.DHShop.dto.response.ApiResponse;
 import vn.DHShop.dto.response.CategoryResponseDTO;
-import vn.DHShop.entity.Category;
 import vn.DHShop.service.CategoryService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
 @Slf4j
 @Validated

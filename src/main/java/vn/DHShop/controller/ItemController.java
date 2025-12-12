@@ -1,5 +1,6 @@
 package vn.DHShop.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -8,12 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import vn.DHShop.dto.request.ItemRequestDTO;
 import vn.DHShop.dto.response.ApiResponse;
 import vn.DHShop.dto.response.ItemResponseDTO;
+import vn.DHShop.dto.response.PageItemsResponseDTO;
 import vn.DHShop.service.ItemService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/items")
+@RequestMapping("/api/items")
 @RequiredArgsConstructor
 @Slf4j
 public class ItemController {
@@ -29,8 +31,9 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ItemResponseDTO>>> getAllItem() {
-        List<ItemResponseDTO> response = itemService.getAllItem();
+    public ResponseEntity<ApiResponse<PageItemsResponseDTO>> getAllItem(
+            @RequestParam int pageNo, @RequestParam int pageSize) {
+        PageItemsResponseDTO response = itemService.getAllItem(pageNo, pageSize);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), "Lấy danh sách item thành công", response));
@@ -50,5 +53,23 @@ public class ItemController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), "Xóa thành công"));
+    }
+
+    @GetMapping(value = "/categories/{categoryId}")
+    public ResponseEntity<ApiResponse<PageItemsResponseDTO>> getItemByCategoryId
+            (@PathVariable Long categoryId, @RequestParam int pageNo, @RequestParam int pageSize) {
+        PageItemsResponseDTO response = itemService.getItemByCategoryId(categoryId, pageNo, pageSize);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Lấy danh sách thành công", response));
+    }
+
+    @GetMapping(value = "/categories/{categoryId}/brands/{brandId}")
+    public ResponseEntity<ApiResponse<PageItemsResponseDTO>> getItemByBrandId
+            (@PathVariable Long categoryId, @PathVariable Long brandId, @RequestParam int pageNo, @RequestParam int pageSize) {
+        PageItemsResponseDTO response = itemService.getItemByBrandId(categoryId, brandId, pageNo, pageSize);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "Lấy danh sách thành công", response));
     }
 }
