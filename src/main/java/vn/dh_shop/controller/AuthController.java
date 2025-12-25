@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vn.dh_shop.dto.request.RegisterRequestDTO;
+import vn.dh_shop.dto.request.auth.LoginRequestDTO;
+import vn.dh_shop.dto.request.auth.RegisterRequestDTO;
 import vn.dh_shop.dto.response.ApiResponse;
-import vn.dh_shop.dto.response.RegisterResponseDTO;
+import vn.dh_shop.dto.response.auth.LoginResponseDTO;
+import vn.dh_shop.dto.response.auth.RegisterResponseDTO;
 import vn.dh_shop.service.UserService;
 
 @RestController
@@ -26,6 +28,14 @@ public class AuthController {
         RegisterResponseDTO response = userService.register(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(HttpStatus.CREATED.value(),"Register Success", response));
+                .body(new ApiResponse<>(HttpStatus.CREATED.value(),"REGISTER_SUCCESS", response));
+    }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<ApiResponse<LoginResponseDTO>> loginUser (@Valid @RequestBody LoginRequestDTO request) {
+        LoginResponseDTO response = userService.login(request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "LOGIN_SUCCESS", response));
     }
 }

@@ -4,14 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.dh_shop.dto.request.RegisterRequestDTO;
-import vn.dh_shop.dto.response.RegisterResponseDTO;
+import vn.dh_shop.dto.request.auth.LoginRequestDTO;
+import vn.dh_shop.dto.request.auth.RegisterRequestDTO;
+import vn.dh_shop.dto.response.auth.LoginResponseDTO;
+import vn.dh_shop.dto.response.auth.RegisterResponseDTO;
 import vn.dh_shop.entity.User;
 import vn.dh_shop.entity.enums.Role;
 import vn.dh_shop.entity.enums.UserStatus;
 import vn.dh_shop.exception.BadRequestException;
 import vn.dh_shop.repository.UserRepository;
 import vn.dh_shop.service.UserService;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,18 +26,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RegisterResponseDTO register(RegisterRequestDTO request) {
-//        check exists Email
-        boolean isExistsEmail = userRepository.existsByEmail(request.getEmail());
-        if (isExistsEmail) throw new BadRequestException("Email đã tồn tại trong hệ thống");
-//        Tạo username
+        //        Set lại email và username
         String email = request.getEmail().toLowerCase();
-        String userName = email.substring(0, email.indexOf("@"));
+        String username = email.substring(0, email.indexOf("@"));
+//        check exists Email
+        boolean isExistsEmail = userRepository.existsByEmail(email);
+        if (isExistsEmail) throw new BadRequestException("Email đã tồn tại trong hệ thống");
+
 //        Hash password
         String hashedPassword = passwordEncoder.encode(request.getPassword());
 //        Tạo entity để lưu vào db
         User user = new User();
         user.setEmail(email);
-        user.setUserName(userName);
+        user.setUserName(username);
         user.setPassword(hashedPassword);
         user.setRole(Role.USER);
         user.setStatus(UserStatus.ACTIVE);
@@ -44,6 +49,24 @@ public class UserServiceImpl implements UserService {
         response.setId(savedUser.getId());
         response.setUsername(savedUser.getUserName());
 
+        return response;
+    }
+
+    @Override
+    public LoginResponseDTO login(LoginRequestDTO request) {
+//        Set lại email
+        String email = request.getEmail().toLowerCase();
+//        Find by email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new BadRequestException("Email hoặc Password không hợp lệ"));
+//        Check status
+        if (user.getStatus() == UserStatus.BLOCKED) throw new BadRequestException("Tài khoản đã bị khóa");
+//        Check password
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) throw new BadRequestException("Email hoặc Password không hợp lệ");
+//        Tạo responseDTO
+        LoginResponseDTO response = new LoginResponseDTO();
+        response.setId(user.getId());
+        response.setUsername(user.getUserName());
         return response;
     }
 }

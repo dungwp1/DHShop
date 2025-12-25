@@ -1,4 +1,4 @@
-package vn.dh_shop.dto.response;
+package vn.dh_shop.dto.response.auth;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

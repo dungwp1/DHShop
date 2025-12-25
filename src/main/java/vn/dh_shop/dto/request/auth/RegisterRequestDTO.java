@@ -1,4 +1,4 @@
-package vn.dh_shop.dto.request;
+package vn.dh_shop.dto.request.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
