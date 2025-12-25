@@ -13,6 +13,7 @@ import vn.dh_shop.entity.enums.Role;
 import vn.dh_shop.entity.enums.UserStatus;
 import vn.dh_shop.exception.BadRequestException;
 import vn.dh_shop.repository.UserRepository;
+import vn.dh_shop.security.jwt.JwtUtil;
 import vn.dh_shop.service.UserService;
 
 import java.util.Optional;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Override
     public RegisterResponseDTO register(RegisterRequestDTO request) {
@@ -63,10 +65,13 @@ public class UserServiceImpl implements UserService {
         if (user.getStatus() == UserStatus.BLOCKED) throw new BadRequestException("Tài khoản đã bị khóa");
 //        Check password
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) throw new BadRequestException("Email hoặc Password không hợp lệ");
+//        Tạo jwt
+        String token = jwtUtil.generateToken(user.getId(),user.getRole().name());
 //        Tạo responseDTO
         LoginResponseDTO response = new LoginResponseDTO();
         response.setId(user.getId());
         response.setUsername(user.getUserName());
+        response.setAccessToken(token);
         return response;
     }
 }

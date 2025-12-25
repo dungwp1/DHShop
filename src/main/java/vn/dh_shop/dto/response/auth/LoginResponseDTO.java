@@ -9,9 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "username"})
+@JsonPropertyOrder({"id", "username", "accessToken"})
 @NoArgsConstructor
 public class LoginResponseDTO {
     private Long id;
     private String username;
+    private String accessToken;
 }
