@@ -1,0 +1,33 @@
+package vn.dh_shop.controller;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import vn.dh_shop.dto.response.ApiResponse;
+import vn.dh_shop.exception.BadRequestException;
+import vn.dh_shop.security.jwt.JwtUtil;
+
+@RestController
+@RequestMapping("/api/jwt/test")
+@RequiredArgsConstructor
+@Slf4j
+public class TestJwtController {
+    private final JwtUtil jwtUtil;
+    @PostMapping
+    public ResponseEntity<ApiResponse<String>> testJwt (@RequestHeader("Authorization") String authorizationHeader) {
+        log.info(authorizationHeader);
+        boolean isValid = jwtUtil.validateToken(authorizationHeader);
+        if (!isValid) throw new BadRequestException("Token lỗi");
+        Long userId = jwtUtil.extractUserId(authorizationHeader);
+        String role = jwtUtil.extractRole(authorizationHeader);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.OK.value()
+                        , "AUTH_SUCCESS", "UserId: "+userId+ " role: "+ role));
+    }
+}
