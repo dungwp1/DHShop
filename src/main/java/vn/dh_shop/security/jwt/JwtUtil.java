@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.Token;
 import org.springframework.stereotype.Component;
 import vn.dh_shop.config.JwtProperties;
+import vn.dh_shop.entity.enums.Role;
 
 import java.util.Date;
 
@@ -17,7 +18,7 @@ import java.util.Date;
 public class JwtUtil {
     private final JwtProperties jwtProperties;
 
-    public String generateToken(Long userId, String role) {
+    public String generateToken(Long userId, Role role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.getExpiration());
 

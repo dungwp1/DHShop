@@ -21,10 +21,12 @@ public class TestJwtController {
     @PostMapping
     public ResponseEntity<ApiResponse<String>> testJwt (@RequestHeader("Authorization") String authorizationHeader) {
         log.info(authorizationHeader);
-        boolean isValid = jwtUtil.validateToken(authorizationHeader);
+        String authHeader = authorizationHeader.split(" ")[1];
+        log.info(authHeader);
+        boolean isValid = jwtUtil.validateToken(authHeader);
         if (!isValid) throw new BadRequestException("Token lỗi");
-        Long userId = jwtUtil.extractUserId(authorizationHeader);
-        String role = jwtUtil.extractRole(authorizationHeader);
+        Long userId = jwtUtil.extractUserId(authHeader);
+        String role = jwtUtil.extractRole(authHeader);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value()

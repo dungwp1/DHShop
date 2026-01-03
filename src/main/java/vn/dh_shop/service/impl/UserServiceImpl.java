@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 //        Check password
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) throw new BadRequestException("Email hoặc Password không hợp lệ");
 //        Tạo jwt
-        String token = jwtUtil.generateToken(user.getId(),user.getRole().name());
+        String token = jwtUtil.generateToken(user.getId(),user.getRole());
 //        Tạo responseDTO
         LoginResponseDTO response = new LoginResponseDTO();
         response.setId(user.getId());

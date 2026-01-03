@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vn.dh_shop.dto.request.CategoryRequestDTO;
@@ -24,6 +25,7 @@ public class CategoryController {
 
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<CategoryResponseDTO>> addCategory(@Valid @RequestBody CategoryRequestDTO request) {
         CategoryResponseDTO response = categoryService.addCategory(request);
         return ResponseEntity
@@ -33,6 +35,7 @@ public class CategoryController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getAllCategories() {
         List<CategoryResponseDTO> listResponse = categoryService.getAllCategories();
         return ResponseEntity
@@ -41,6 +44,7 @@ public class CategoryController {
     }
 
     @GetMapping(value = "/{categoryId}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<ApiResponse<CategoryResponseDTO>> getCategoryById(@PathVariable Long categoryId) {
         CategoryResponseDTO response = categoryService.getCategoryById(categoryId);
         return ResponseEntity
@@ -49,6 +53,7 @@ public class CategoryController {
     }
 
     @PutMapping(value = "/{categoryId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<CategoryResponseDTO>> updateCategoryId(@PathVariable Long categoryId, @RequestBody CategoryRequestDTO request) {
         CategoryResponseDTO response = categoryService.updateCategoryById(categoryId, request);
         return ResponseEntity
@@ -57,6 +62,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(value = "/{categoryId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity
