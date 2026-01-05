@@ -25,8 +25,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             HttpServletResponse response,
             AuthenticationException authException
     ) throws IOException, ServletException {
-        String message = request.getAttribute("auth_error").toString();
-        if (message == null) message = "UNAUTHORIZED";
+
+        Object authError = request.getAttribute("auth_error");
+        String message =  (authError instanceof String) ? (String) authError : "UNAUTHORIZED";
 
         log.warn("UNAUTHORIZED access to {} - reason: {}", request.getRequestURI(), message);
 
