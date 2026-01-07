@@ -1,4 +1,4 @@
-package vn.dh_shop.dto.request;
+package vn.dh_shop.dto.color;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,7 +1,7 @@
 package vn.dh_shop.service;
 
-import vn.dh_shop.dto.request.StorageRequestDTO;
-import vn.dh_shop.dto.response.StorageResponseDTO;
+import vn.dh_shop.dto.storage.StorageRequestDTO;
+import vn.dh_shop.dto.storage.StorageResponseDTO;
 
 import java.util.List;
 

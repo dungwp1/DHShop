@@ -1,7 +1,7 @@
 package vn.dh_shop.service;
 
-import vn.dh_shop.dto.request.BrandRequestDTO;
-import vn.dh_shop.dto.response.BrandResponseDTO;
+import vn.dh_shop.dto.brand.BrandRequestDTO;
+import vn.dh_shop.dto.brand.BrandResponseDTO;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package vn.dh_shop.service;
 
-import vn.dh_shop.dto.request.ColorRequestDTO;
-import vn.dh_shop.dto.response.ColorResponseDTO;
+import vn.dh_shop.dto.color.ColorRequestDTO;
+import vn.dh_shop.dto.color.ColorResponseDTO;
 
 import java.util.List;
 

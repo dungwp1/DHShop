@@ -7,7 +7,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import vn.dh_shop.dto.response.ApiResponse;
+import vn.dh_shop.dto.common.ApiResponse;
 
 import java.util.List;
 

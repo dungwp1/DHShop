@@ -1,8 +1,8 @@
 package vn.dh_shop.service;
 
-import vn.dh_shop.dto.request.ItemRequestDTO;
-import vn.dh_shop.dto.response.ItemResponseDTO;
-import vn.dh_shop.dto.response.PageItemsResponseDTO;
+import vn.dh_shop.dto.item.ItemRequestDTO;
+import vn.dh_shop.dto.item.ItemResponseDTO;
+import vn.dh_shop.dto.item.PageItemsResponseDTO;
 
 public interface ItemService {
     ItemResponseDTO addItem(ItemRequestDTO request);

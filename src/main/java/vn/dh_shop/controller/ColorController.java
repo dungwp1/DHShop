@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vn.dh_shop.dto.request.ColorRequestDTO;
-import vn.dh_shop.dto.response.ApiResponse;
-import vn.dh_shop.dto.response.ColorResponseDTO;
+import vn.dh_shop.dto.color.ColorRequestDTO;
+import vn.dh_shop.dto.common.ApiResponse;
+import vn.dh_shop.dto.color.ColorResponseDTO;
 import vn.dh_shop.service.ColorService;
 
 import java.util.List;

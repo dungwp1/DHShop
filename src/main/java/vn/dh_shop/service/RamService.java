@@ -1,7 +1,7 @@
 package vn.dh_shop.service;
 
-import vn.dh_shop.dto.request.RamRequestDTO;
-import vn.dh_shop.dto.response.RamResponseDTO;
+import vn.dh_shop.dto.ram.RamRequestDTO;
+import vn.dh_shop.dto.ram.RamResponseDTO;
 
 import java.util.List;
 

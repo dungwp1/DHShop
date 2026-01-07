@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.dh_shop.dto.request.auth.LoginRequestDTO;
-import vn.dh_shop.dto.request.auth.RegisterRequestDTO;
-import vn.dh_shop.dto.response.auth.LoginResponseDTO;
-import vn.dh_shop.dto.response.auth.RegisterResponseDTO;
+import vn.dh_shop.dto.auth.LoginRequestDTO;
+import vn.dh_shop.dto.auth.RegisterRequestDTO;
+import vn.dh_shop.dto.auth.LoginResponseDTO;
+import vn.dh_shop.dto.auth.RegisterResponseDTO;
 import vn.dh_shop.entity.User;
 import vn.dh_shop.entity.enums.Role;
 import vn.dh_shop.entity.enums.UserStatus;
@@ -15,8 +15,6 @@ import vn.dh_shop.exception.BadRequestException;
 import vn.dh_shop.repository.UserRepository;
 import vn.dh_shop.security.jwt.JwtUtil;
 import vn.dh_shop.service.UserService;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

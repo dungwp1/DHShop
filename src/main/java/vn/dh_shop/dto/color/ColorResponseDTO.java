@@ -1,4 +1,4 @@
-package vn.dh_shop.dto.response;
+package vn.dh_shop.dto.color;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;

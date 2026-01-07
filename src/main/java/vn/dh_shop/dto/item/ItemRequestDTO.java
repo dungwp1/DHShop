@@ -1,4 +1,4 @@
-package vn.dh_shop.dto.request;
+package vn.dh_shop.dto.item;
 
 import lombok.Getter;
 import lombok.Setter;

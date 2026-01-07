@@ -10,7 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
-import vn.dh_shop.dto.response.ApiResponse;
+import vn.dh_shop.dto.common.ApiResponse;
 
 import java.io.IOException;
 

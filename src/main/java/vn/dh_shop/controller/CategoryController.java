@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vn.dh_shop.dto.request.CategoryRequestDTO;
-import vn.dh_shop.dto.response.ApiResponse;
-import vn.dh_shop.dto.response.CategoryResponseDTO;
+import vn.dh_shop.dto.category.CategoryRequestDTO;
+import vn.dh_shop.dto.common.ApiResponse;
+import vn.dh_shop.dto.category.CategoryResponseDTO;
 import vn.dh_shop.service.CategoryService;
 
 import java.util.List;

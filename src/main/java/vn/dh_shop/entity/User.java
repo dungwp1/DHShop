@@ -29,6 +29,4 @@ public class User extends AbstractEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private UserStatus status;
-
-
 }

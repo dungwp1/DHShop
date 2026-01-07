@@ -1,7 +1,7 @@
 package vn.dh_shop.service;
 
-import vn.dh_shop.dto.request.ModelRequestDTO;
-import vn.dh_shop.dto.response.ModelResponseDTO;
+import vn.dh_shop.dto.model.ModelRequestDTO;
+import vn.dh_shop.dto.model.ModelResponseDTO;
 
 import java.util.List;
 

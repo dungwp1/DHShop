@@ -1,4 +1,4 @@
-package vn.dh_shop.dto.request;
+package vn.dh_shop.dto.model;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

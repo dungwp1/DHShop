@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.dh_shop.dto.response.ApiResponse;
+import vn.dh_shop.dto.common.ApiResponse;
 import vn.dh_shop.exception.BadRequestException;
 import vn.dh_shop.security.jwt.JwtUtil;
 import vn.dh_shop.security.util.SecurityUtils;

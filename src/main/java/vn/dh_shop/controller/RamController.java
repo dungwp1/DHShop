@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vn.dh_shop.dto.request.RamRequestDTO;
-import vn.dh_shop.dto.response.ApiResponse;
-import vn.dh_shop.dto.response.RamResponseDTO;
+import vn.dh_shop.dto.ram.RamRequestDTO;
+import vn.dh_shop.dto.common.ApiResponse;
+import vn.dh_shop.dto.ram.RamResponseDTO;
 import vn.dh_shop.service.RamService;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package vn.dh_shop.service;
 
-import vn.dh_shop.dto.request.CategoryRequestDTO;
-import vn.dh_shop.dto.response.CategoryResponseDTO;
+import vn.dh_shop.dto.category.CategoryRequestDTO;
+import vn.dh_shop.dto.category.CategoryResponseDTO;
 
 import java.util.List;
 
