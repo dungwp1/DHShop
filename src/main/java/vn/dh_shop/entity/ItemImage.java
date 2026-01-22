@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity(name = "ItemImage")
 @Setter
 @Getter
-public class ItemImage extends AbstractEntity {
+public class ItemImage extends CommonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")

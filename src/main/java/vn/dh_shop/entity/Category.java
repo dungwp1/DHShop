@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "category")
-public class Category extends AbstractEntity{
+public class Category extends CommonEntity {
     @Column(name = "name")
     private String name;
 

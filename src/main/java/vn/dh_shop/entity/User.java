@@ -12,7 +12,7 @@ import vn.dh_shop.entity.enums.UserStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends AbstractEntity{
+public class User extends CommonEntity {
     @Column(name = "email", unique = true, nullable = false, length = 100)
     private String email;
 

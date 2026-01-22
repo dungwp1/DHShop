@@ -11,4 +11,6 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
     List<Model> findAllByBrandId(Long brandId);
 
     Page<Model> findModelsByBrandId(Long brandId, Pageable pageable);
+
+
 }

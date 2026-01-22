@@ -4,9 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component
 @Slf4j
 public final class SecurityUtils {
 
@@ -26,7 +27,7 @@ public final class SecurityUtils {
                 && !(authentication instanceof AnonymousAuthenticationToken);
     }
 
-    public static Long getUserId() {
+    public Long getUserId() {
         if (!isAuthenticated()) {
             log.warn("No authenticated user found");
             return null;
@@ -40,7 +41,7 @@ public final class SecurityUtils {
         return null;
     }
 
-    public static String getUserRole() {
+    public String getUserRole() {
         if (!isAuthenticated()) {
             return null;
         }

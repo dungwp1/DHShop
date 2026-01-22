@@ -10,7 +10,7 @@ import lombok.Setter;
 })
 @Getter
 @Setter
-public class CartItem extends AbstractEntity{
+public class CartItem extends CommonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)

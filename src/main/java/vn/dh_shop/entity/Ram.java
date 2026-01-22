@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity(name = "ram")
 @Setter
 @Getter
-public class Ram extends AbstractEntity {
+public class Ram extends CommonEntity {
     @Column(name = "name")
     private String name;
 

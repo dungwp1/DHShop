@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity(name = "item")
 @Getter
 @Setter
-public class Item extends AbstractEntity {
+public class Item extends CommonEntity {
 
     @ManyToOne
     @JoinColumn(name = "category_id")

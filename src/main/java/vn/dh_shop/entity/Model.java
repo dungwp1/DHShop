@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "model")
-public class Model extends AbstractEntity{
+public class Model extends CommonEntity {
     @Column(name = "name")
     private String name;
 

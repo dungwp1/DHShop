@@ -1,17 +1,15 @@
 package vn.dh_shop.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 @MappedSuperclass
-public abstract class AbstractEntity {
+public class CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,5 +24,8 @@ public abstract class AbstractEntity {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateAt;
+    
+    
+    
 
 }

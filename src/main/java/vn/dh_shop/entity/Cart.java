@@ -8,10 +8,9 @@ import lombok.Setter;
 @Table(name = "cart")
 @Getter
 @Setter
-public class Cart extends AbstractEntity{
+public class Cart extends CommonEntity {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
-
 }

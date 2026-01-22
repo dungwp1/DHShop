@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "brand")
-public class Brand extends AbstractEntity{
+public class Brand extends CommonEntity {
     @Column(name = "name")
     private String name;
 
