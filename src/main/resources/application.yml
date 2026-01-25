@@ -1,0 +1,26 @@
+
+spring:
+  application:
+    name: dungjava
+  datasource:
+    url: jdbc:mysql://localhost:3307/dhshop
+    username: dungwp
+    password: 12345678
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8080
+
+jwt:
+  secret: dhshop-super-secret-key-256-bit-minimum-length-2025
+  expiration: 6000000
+
+
+vnpay:
+  tmn-code: PM85T1JT
+  hash-secret: K1EAK6ZBCGMXNDSTRV050Y8V1ZBROHGL
+  pay-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  return-url: http://localhost:8080/api/payments/vnpay/return
+
