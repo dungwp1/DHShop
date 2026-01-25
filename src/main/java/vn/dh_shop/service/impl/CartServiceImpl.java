@@ -67,7 +67,7 @@ public class CartServiceImpl implements CartService {
         }
 
 //        Get list cart item
-        List<CartItem> listCartItem = cartItemRepository.findByCartId(cart.getId());
+        List<CartItem> listCartItem = cartItemRepository.findAllByCartId(cart.getId());
 
         return buildCartResponse(listCartItem);
 
@@ -85,7 +85,7 @@ public class CartServiceImpl implements CartService {
         }
         Cart cart = cartOpt.get();
 //      get list cartitem
-        List<CartItem> listCartItem = cartItemRepository.findByCartId(cart.getId());
+        List<CartItem> listCartItem = cartItemRepository.findAllByCartId(cart.getId());
 //        build cartitem response
 
         return buildCartResponse(listCartItem);
@@ -111,7 +111,7 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.save(cartItem);
         }
 //        Build response DTO
-        List<CartItem> listCartItem = cartItemRepository.findByCartId(cartOpt.get().getId());
+        List<CartItem> listCartItem = cartItemRepository.findAllByCartId(cartOpt.get().getId());
         return buildCartResponse(listCartItem);
     }
 
@@ -128,7 +128,7 @@ public class CartServiceImpl implements CartService {
         if (cartItem == null) throw new EntityNotFoundException("Không tìm thấy sản phẩm trong giỏ hàng");
 //        Xóa cartItem
         cartItemRepository.delete(cartItem);
-        List<CartItem> listCartItem = cartItemRepository.findByCartId(cart.get().getId());
+        List<CartItem> listCartItem = cartItemRepository.findAllByCartId(cart.get().getId());
         return buildCartResponse(listCartItem);
     }
 
@@ -142,8 +142,8 @@ public class CartServiceImpl implements CartService {
         Optional<Cart> cart = cartRepository.findCartByUserId(userId);
         if (cart.isEmpty()) return CartResponseDTO.empty();
 //        Xóa cartItems
-        cartItemRepository.deleteByCartId(cart.get().getId());
-        List<CartItem> listCartItem = cartItemRepository.findByCartId(cart.get().getId());
+        cartItemRepository.deleteALlByCartId(cart.get().getId());
+        List<CartItem> listCartItem = cartItemRepository.findAllByCartId(cart.get().getId());
         return buildCartResponse(listCartItem);
     }
 

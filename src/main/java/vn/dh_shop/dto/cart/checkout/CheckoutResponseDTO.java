@@ -13,7 +13,7 @@ import java.util.List;
 @JsonPropertyOrder({"canCheckout", "subTotal", "discount", "shippingFee", "finalPrice", "items"})
 public class CheckoutResponseDTO {
     private List<CheckoutItemResponseDTO> items;
-    private Long subTotal;
+    private Long subtotal;
     private Long shippingFee;
     private Long discount;
     private Long finalPrice;
@@ -22,7 +22,7 @@ public class CheckoutResponseDTO {
     public static CheckoutResponseDTO notAllowed() {
         return CheckoutResponseDTO.builder()
                 .items(List.of())
-                .subTotal(0L)
+                .subtotal(0L)
                 .shippingFee(0L)
                 .discount(0L)
                 .finalPrice(0L)

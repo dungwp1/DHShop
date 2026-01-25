@@ -18,14 +18,10 @@ public class CommonEntity {
     @Column(name = "create_at")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
+    private Date createdAt;
 
     @Column(name = "update_at")
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updateAt;
-    
-    
-    
-
+    private Date updatedAt;
 }

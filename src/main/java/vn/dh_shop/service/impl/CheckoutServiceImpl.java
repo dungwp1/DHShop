@@ -32,7 +32,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         Optional<Cart> cart = cartRepository.findCartByUserId(userId);
         if (cart.isEmpty()) throw new BadRequestException("Không tìm thấy giỏ hàng");
 //        Get cartItem theo cartId
-        List<CartItem> cartItemList = cartItemRepository.findByCartId(cart.get().getId());
+        List<CartItem> cartItemList = cartItemRepository.findAllByCartId(cart.get().getId());
         if (cartItemList.isEmpty()) throw new BadRequestException("Giỏ hàng trống");
 //        Build checkoutItem
         List<CheckoutItemResponseDTO> listCheckoutItem = new ArrayList<>();
@@ -60,7 +60,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         return CheckoutResponseDTO.builder()
                 .items(listCheckoutItem)
-                .subTotal(subtotal)
+                .subtotal(subtotal)
                 .shippingFee(shippingFee)
                 .discount(discount)
                 .finalPrice(finalPrice)
