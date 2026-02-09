@@ -4,4 +4,5 @@ public enum PaymentStatus {
     INIT,
     SUCCESS,
     FAILED,
+    REDIRECTED
 }

@@ -1,13 +1,11 @@
 package vn.dh_shop.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.dh_shop.dto.common.ApiResponse;
 import vn.dh_shop.dto.order.OrderResponseDTO;
 import vn.dh_shop.service.OrderService;
@@ -32,6 +30,13 @@ public class OrderController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse<List<OrderResponseDTO>>> getOrder() {
         List<OrderResponseDTO> response = orderService.getOrder();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(HttpStatus.OK.value(), "GET_ORDER_SUCCESS", response));
+    }
+    @GetMapping(value = "/{orderId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<ApiResponse<OrderResponseDTO>> getOrderById(@PathVariable Long orderId) {
+        OrderResponseDTO response = orderService.getOrderById(orderId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), "GET_ORDER_SUCCESS", response));
     }

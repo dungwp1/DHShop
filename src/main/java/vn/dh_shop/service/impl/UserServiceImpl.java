@@ -4,16 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.dh_shop.dto.auth.LoginRequestDTO;
-import vn.dh_shop.dto.auth.RegisterRequestDTO;
-import vn.dh_shop.dto.auth.LoginResponseDTO;
-import vn.dh_shop.dto.auth.RegisterResponseDTO;
+import vn.dh_shop.dto.auth.*;
 import vn.dh_shop.entity.User;
 import vn.dh_shop.entity.enums.Role;
 import vn.dh_shop.entity.enums.UserStatus;
 import vn.dh_shop.exception.BadRequestException;
 import vn.dh_shop.repository.UserRepository;
 import vn.dh_shop.security.jwt.JwtUtil;
+import vn.dh_shop.security.util.SecurityUtils;
 import vn.dh_shop.service.UserService;
 
 @Service
@@ -23,6 +21,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final SecurityUtils securityUtils;
 
     @Override
     public RegisterResponseDTO register(RegisterRequestDTO request) {
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
 //        Tạo entity để lưu vào db
         User user = new User();
         user.setEmail(email);
-        user.setUserName(username);
+        user.setUsername(username);
         user.setPassword(hashedPassword);
         user.setRole(Role.USER);
         user.setStatus(UserStatus.ACTIVE);
@@ -47,13 +46,13 @@ public class UserServiceImpl implements UserService {
 //        Tạo responseDTO
         RegisterResponseDTO response = new RegisterResponseDTO();
         response.setId(savedUser.getId());
-        response.setUsername(savedUser.getUserName());
+        response.setUsername(savedUser.getUsername());
 
         return response;
     }
 
     @Override
-    public LoginResponseDTO login(LoginRequestDTO request) {
+    public AuthResult login(LoginRequestDTO request) {
 //        Set lại email
         String email = request.getEmail().toLowerCase();
 //        Find by email
@@ -65,11 +64,31 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) throw new BadRequestException("Email hoặc Password không hợp lệ");
 //        Tạo jwt
         String token = jwtUtil.generateToken(user.getId(),user.getRole());
-//        Tạo responseDTO
-        LoginResponseDTO response = new LoginResponseDTO();
+//        Tạo AuthResult
+        WebLoginResponseDTO webLoginResponse = new WebLoginResponseDTO();
+        webLoginResponse.setId(user.getId());
+        webLoginResponse.setUsername(user.getUsername());
+
+
+        AuthResult authResult = new AuthResult();
+        authResult.setUser(webLoginResponse);
+        authResult.setAccessToken(token);
+
+        return authResult;
+    }
+
+    public AuthMeResponseDTO getCurrentUser() {
+        Long userId = securityUtils.getUserId();
+        if (userId == null) throw new BadRequestException("Không tìm thấy user");
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        AuthMeResponseDTO response = new AuthMeResponseDTO();
         response.setId(user.getId());
-        response.setUsername(user.getUserName());
-        response.setAccessToken(token);
+        response.setUsername(user.getUsername());
+        response.setRole(user.getRole());
         return response;
     }
+
 }

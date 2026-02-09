@@ -67,8 +67,6 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(totalPrice);
         order = orderRepository.save(order);
 
-//        clear cart
-        cartItemRepository.deleteAll(cartItemList);
 //        tạo responseItemDTO
         List<OrderItemResponseDTO> orderItemResponseList = new ArrayList<>();
         List<OrderItem> orderItemList = orderItemRepository.findAllByOrderId(order.getId());
@@ -128,6 +126,38 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return responseList;
+    }
+
+    @Override
+    public OrderResponseDTO getOrderById(Long orderId) {
+        Long userId = securityUtils.getUserId();
+        if (userId == null) throw new BadRequestException("Không tìm thấy user");
+
+//get order
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(()-> new EntityNotFoundException("Không tìm thấy order"));
+
+        List<OrderItem> orderItemList = orderItemRepository.findAllByOrderId(order.getId());
+
+        List<OrderItemResponseDTO> orderItemResponseDTOList = new ArrayList<>();
+
+        for (OrderItem orderItem : orderItemList) {
+                OrderItemResponseDTO orderItemResponse = OrderItemResponseDTO.builder()
+                        .name(orderItem.getName())
+                        .price(orderItem.getPrice())
+                        .quantity(orderItem.getQuantity())
+                        .subtotal(orderItem.getSubtotal())
+                        .build();
+                orderItemResponseDTOList.add(orderItemResponse);
+            }
+
+        return OrderResponseDTO.builder()
+                    .orderId(order.getId())
+                    .items(orderItemResponseDTOList)
+                    .totalPrice(order.getTotalPrice())
+                    .status(order.getStatus())
+                    .createdAt(order.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                    .build();
     }
 
 

@@ -20,7 +20,7 @@ public class User extends CommonEntity {
     private String password;
 
     @Column(name = "username", nullable = false)
-    private String userName;
+    private String username;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)

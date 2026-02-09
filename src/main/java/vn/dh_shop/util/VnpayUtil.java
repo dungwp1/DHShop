@@ -9,68 +9,74 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class VnpayUtil {
 
-    private final VnpayConfig config;
+    private final VnpayConfig vnpayConfig;
 
-    public String buildPaymentUrl(Map<String, String> params) {
-        try {
-            // 1. Sắp xếp tham số theo Alphabet (Dùng TreeMap là chuẩn rồi)
-            Map<String, String> sorted = new TreeMap<>(params);
-
-            StringBuilder hashData = new StringBuilder();
-            StringBuilder query = new StringBuilder();
-
-            for (Map.Entry<String, String> entry : sorted.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-
-                if (value != null && !value.isEmpty()) {
-                    // 2. Encode cả Key và Value
-                    String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8.toString());
-                    String encodedValue = URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-
-                    // 3. QUAN TRỌNG: Chuyển đổi dấu "+" thành "%20" cho đúng chuẩn VNPAY
-                    encodedKey = encodedKey.replace("+", "%20");
-                    encodedValue = encodedValue.replace("+", "%20");
-
-                    // 4. Build đồng thời cả HashData và QueryString
-                    hashData.append(encodedKey).append("=").append(encodedValue);
-                    query.append(encodedKey).append("=").append(encodedValue);
-
-                    hashData.append("&");
-                    query.append("&");
-                }
-            }
-
-            // Xóa dấu & thừa ở cuối
-            hashData.deleteCharAt(hashData.length() - 1);
-            query.deleteCharAt(query.length() - 1);
-
-            // 5. Tính toán mã băm từ chuỗi đã được chuẩn hóa (đã có %20)
-            String secureHash = hmacSHA512(config.getHashSecret(), hashData.toString());
-
-            log.info("VNPAY HASH DATA (Fixed): {}", hashData);
-
-            // 6. Trả về URL (Bỏ SecureHashType)
-            return config.getPayUrl() + "?" + query.toString() + "&vnp_SecureHash=" + secureHash;
-
-        } catch (Exception e) {
-            log.error("Lỗi build URL VNPAY", e);
-            throw new RuntimeException(e);
-        }
+    public String buildVNpayPaymentUrl(Map<String, String> params) {
+        String vnp_SecureHash = hashAllFields(params);
+        StringBuilder queryUrl = buildQueryString(params);
+        queryUrl.append("&vnp_SecureHash=").append(vnp_SecureHash);
+        return vnpayConfig.getPayUrl() + "?" + queryUrl;
     }
 
+    public String hashAllFields(Map<String,String> fields) {
+        // create a list and sort it
+        List<String> fieldNames = new ArrayList<>(fields.keySet());
+        Collections.sort(fieldNames);
 
-    public static String hmacSHA512(final String key, final String data) {
+        StringBuilder sb = new StringBuilder();
+
+        Iterator<String> itr = fieldNames.iterator();
+        while (itr.hasNext()) {
+            String fieldName = itr.next();
+            String fieldValue = fields.get(fieldName);
+            if ((fieldValue != null) && (!fieldValue.isEmpty())) {
+                sb.append(fieldName);
+                sb.append("=");
+                sb.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+            }
+            if (itr.hasNext()) {
+                sb.append("&");
+            }
+        }
+        return hmacSHA512(vnpayConfig.getHashSecret(),sb.toString());
+    }
+
+    private StringBuilder buildQueryString (Map<String, String> params) {
+        //Build data to hash and query string
+        List<String> fieldNames = new ArrayList<>(params.keySet());
+        Collections.sort(fieldNames);
+
+        StringBuilder query = new StringBuilder();
+
+        Iterator<String> itr = fieldNames.iterator();
+        while (itr.hasNext()) {
+            String fieldName = itr.next();
+            String fieldValue = params.get(fieldName);
+            if ((fieldValue != null) && (!fieldValue.isEmpty())) {
+                //Build query
+                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII))
+                        .append('=')
+                        .append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+                if (itr.hasNext()) {
+                    query.append('&');
+                }
+            }
+        }
+        return query;
+    }
+
+    private String hmacSHA512(final String key, final String data) {
         try {
-            if (key == null || data == null) throw new NullPointerException();
+            if (key == null || data == null) {
+                throw new NullPointerException();
+            }
             final Mac hmac512 = Mac.getInstance("HmacSHA512");
             byte[] hmacKeyBytes = key.getBytes();
             final SecretKeySpec secretKey = new SecretKeySpec(hmacKeyBytes, "HmacSHA512");
@@ -82,10 +88,12 @@ public class VnpayUtil {
                 sb.append(String.format("%02x", b & 0xff));
             }
             return sb.toString();
+
         } catch (Exception ex) {
-            return "";
+            throw new RuntimeException("HMAC SHA512 failed", ex);
         }
     }
+
 
 
 }

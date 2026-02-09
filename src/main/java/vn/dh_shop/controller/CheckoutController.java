@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.dh_shop.dto.cart.checkout.CheckoutResponseDTO;
@@ -17,7 +17,7 @@ import vn.dh_shop.service.CheckoutService;
 public class CheckoutController {
     private final CheckoutService checkoutService;
 
-    @PostMapping()
+    @GetMapping()
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse<CheckoutResponseDTO>> checkoutPreview () {
         CheckoutResponseDTO response = checkoutService.checkoutPreview();

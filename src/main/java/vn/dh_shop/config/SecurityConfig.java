@@ -35,14 +35,7 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // Cho phép tất cả request (tạm thời)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/auth/**").permitAll()
-//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/api/user/**").hasAnyRole("USER","ADMIN")
-//                        .requestMatchers("/api/**").authenticated()
-//                        .anyRequest().permitAll()
-//                )
+
                 .authorizeHttpRequests(auth -> auth
 
                         // CATEGORY - GET: USER + ADMIN
@@ -58,7 +51,12 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
 
                         // AUTH API PUBLIC
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/payments/vnpay/return",
+                                "/api/payments/vnpay/ipn",
+                                "/api/payments/**"
+                                ).permitAll()
 
                         // OTHER API REQUIRE AUTH
                         .anyRequest().authenticated()
